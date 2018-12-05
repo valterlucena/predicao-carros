@@ -1,0 +1,44 @@
+---
+title: "Predicao de preços de Carros"
+author: "A equipe"
+date: "5 de dezembro de 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(caret)
+```
+
+```{r}
+carros <- read.csv(here("data/true_car_listings.csv"))
+carros <- carros %>% select(-Vin)
+```
+
+# dividindo em treino e teste
+
+```{r}
+particao <- createDataPartition(y = carros$Price, p = 0.8, list = FALSE)
+```
+
+```{r}
+set.seed(397)
+
+treino <- carros[particao, ]
+write.csv(x = treino,
+          file = "treino.csv",
+          row.names = FALSE)
+
+validacao <- carros[-particao, ]
+write.csv(x = validacao,
+          file = "validacao.csv",
+          row.names = FALSE)
+```
+
+
+
