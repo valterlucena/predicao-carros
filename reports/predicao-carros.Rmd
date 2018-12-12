@@ -21,9 +21,7 @@ theme_set(theme_minimal())
 ```{r, warning=FALSE, message=FALSE}
 treino <- read.csv(here("data/treino.csv"))
 validacao <- read.csv(here("data/validacao.csv"))
-
 ```
-
 
 
 ```{r}
@@ -39,23 +37,23 @@ treino %>%
 ```{r}
 set.seed(379)
 
-v <- treino[sample(nrow(treino), 10), ]
+amostra <- treino[sample(nrow(treino), 5000), ]
 ```
 
 
 
 ```{r}
-treino$Year <- as.factor(treino$Year)
-treino$City <- as.factor(treino$City)
-treino$State <- as.factor(treino$State)
-treino$Model <- as.factor(treino$Model)
-treino$Make <- as.factor(treino$Make)
+amostra$Year <- as.factor(amostra$Year)
+amostra$City <- as.factor(amostra$City)
+amostra$State <- as.factor(amostra$State)
+amostra$Model <- as.factor(amostra$Model)
+amostra$Make <- as.factor(amostra$Make)
 ```
 
 
 ```{r}
 controle <- trainControl(method = "repeatedcv",
-                   number = 1,
+                   number = 5,
                    repeats = 10,
                    verboseIter = TRUE)
 ```
@@ -65,14 +63,29 @@ preProcessamento <- c("scale", "center", "nzv")
 ```
 
 ```{r}
-lambdaGrid <- expand.grid(lambda = 10^seq(10, -2, length=100))
+modelo.ridge <- train(Price ~ .,
+                      data = amostra,
+                      trControl = controle,
+                      preProcess = preProcessamento,
+                      method = "ridge")
+saveRDS(modelo.ridge, "ridge.rds")
 ```
 
+```{r}
+modelo.knn <- train(Price ~.,
+                    data = amostra,
+                    trControl = controle,
+                    preProcess = preProcessamento,
+                    method = "knn")
+saveRDS(modelo.knn, "knn.rds")
+```
 
 ```{r}
-modelo.ridge <- train(Price ~ .,
-                      data = v,
-                      trControl = controle,
-                      method = "ridge")
+modelo.mlp <- train(Price ~.,
+                    data = amostra,
+                    trControl = controle,
+                    preProcess = preProcessamento,
+                    method = "mlpML")
+saveRDS(modelo.mlp, "mlp.rds")
 ```
 
