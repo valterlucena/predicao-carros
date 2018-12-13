@@ -21,8 +21,8 @@ theme_set(theme_minimal())
 
 
 ```{r, warning=FALSE, message=FALSE}
-treino <- read.csv(here("data/treino.csv"))
-validacao <- read.csv(here("data/validacao.csv"))
+treino <- read.csv(here("data/treino.csv"), encoding = "latin1")
+validacao <- read.csv(here("data/validacao.csv"), encoding = "latin1")
 ```
 
 
@@ -45,7 +45,7 @@ amostra <- treino[sample(nrow(treino), 5000), ]
 
 
 ```{r}
-amostra$Year <- as.factor(amostra$Year)
+amostra$Year <- as.factor(fa(amostra$Year))
 amostra$City <- as.factor(amostra$City)
 amostra$State <- as.factor(amostra$State)
 amostra$Model <- as.factor(amostra$Model)
@@ -94,11 +94,22 @@ modelo.knn
 ```
 
 ```{r}
-modelo.mlp <- train(Price ~.,
+removeNaoAlfanumericos <- function(x) str_replace_all(x, "[^[:alnum:]]", "")
+```
+
+```{r}
+amostra$City <- removeNaoAlfanumericos(amostra$City)
+amostra$State <- removeNaoAlfanumericos(amostra$State)
+amostra$Model <- removeNaoAlfanumericos(amostra$Model)
+amostra$Make <- removeNaoAlfanumericos(amostra$Make)
+```
+
+```{r}
+modelo.mlp <- caret::train(Price ~ .,
                     data = amostra,
                     trControl = controle,
                     preProcess = preProcessamento,
-                    method = "neuralnet")
+                    method = "mlp")
 saveRDS(modelo.mlp, "mlp.rds")
 ```
 
