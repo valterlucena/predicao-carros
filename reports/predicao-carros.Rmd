@@ -45,7 +45,7 @@ amostra <- treino[sample(nrow(treino), 5000), ]
 
 
 ```{r}
-amostra$Year <- as.factor(fa(amostra$Year))
+amostra$Year <- as.factor((amostra$Year))
 amostra$City <- as.factor(amostra$City)
 amostra$State <- as.factor(amostra$State)
 amostra$Model <- as.factor(amostra$Model)
@@ -65,12 +65,12 @@ preProcessamento <- c("scale", "center", "nzv")
 ```
 
 ```{r}
-modelo.ridge <- train(Price ~ .,
-                      data = amostra,
-                      trControl = controle,
-                      preProcess = preProcessamento,
-                      method = "ridge")
-saveRDS(modelo.ridge, "ridge.rds")
+# modelo.ridge <- train(Price ~ .,
+#                       data = amostra,
+#                       trControl = controle,
+#                       preProcess = preProcessamento,
+#                       method = "ridge")
+# saveRDS(modelo.ridge, "ridge.rds")
 ```
 
 ```{r}
@@ -80,12 +80,12 @@ modelo.ridge
 
 
 ```{r}
-modelo.knn <- train(Price ~.,
-                    data = amostra,
-                    trControl = controle,
-                    preProcess = preProcessamento,
-                    method = "knn")
-saveRDS(modelo.knn, "knn.rds")
+# modelo.knn <- train(Price ~.,
+#                     data = amostra,
+#                     trControl = controle,
+#                     preProcess = preProcessamento,
+#                     method = "knn")
+# saveRDS(modelo.knn, "knn.rds")
 ```
 
 ```{r}
@@ -105,12 +105,12 @@ amostra$Make <- removeNaoAlfanumericos(amostra$Make)
 ```
 
 ```{r}
-modelo.mlp <- caret::train(Price ~ .,
-                    data = amostra,
-                    trControl = controle,
-                    preProcess = preProcessamento,
-                    method = "mlp")
-saveRDS(modelo.mlp, "mlp.rds")
+# modelo.mlp <- caret::train(Price ~ .,
+#                     data = amostra,
+#                     trControl = controle,
+#                     preProcess = preProcessamento,
+#                     method = "mlp")
+# saveRDS(modelo.mlp, "mlp.rds")
 ```
 
 ```{r}
