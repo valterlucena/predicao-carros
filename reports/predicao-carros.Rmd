@@ -13,6 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
 library(caret)
+library(elasticnet)
+library(RSNNS)
 
 theme_set(theme_minimal())
 ```
@@ -72,6 +74,12 @@ saveRDS(modelo.ridge, "ridge.rds")
 ```
 
 ```{r}
+modelo.ridge <- readRDS(file="ridge.rds")
+modelo.ridge
+```
+
+
+```{r}
 modelo.knn <- train(Price ~.,
                     data = amostra,
                     trControl = controle,
@@ -81,11 +89,20 @@ saveRDS(modelo.knn, "knn.rds")
 ```
 
 ```{r}
+modelo.knn <- readRDS(file="knn.rds")
+modelo.knn
+```
+
+```{r}
 modelo.mlp <- train(Price ~.,
                     data = amostra,
                     trControl = controle,
                     preProcess = preProcessamento,
-                    method = "mlpML")
+                    method = "neuralnet")
 saveRDS(modelo.mlp, "mlp.rds")
 ```
 
+```{r}
+modelo.mlp <- readRDS(file="mlp.rds")
+modelo.mlp
+```
