@@ -78,6 +78,36 @@ modelo.ridge <- readRDS(file="ridge.rds")
 modelo.ridge
 ```
 
+```{r}
+plot(modelo.ridge, xlab = "Lambda")
+```
+
+```{r}
+plot(varImp(modelo.ridge))
+```
+
+```{r}
+set.seed(379)
+amostra.validacao <- validacao[sample(nrow(validacao), 5000),]
+
+predicoes <- predict(modelo.ridge)
+predicoes
+
+df.ridge.pred <- data.frame(previsao = predicoes, observado = amostra.validacao$Price)
+
+df.ridge.pred %>% 
+  ggplot(aes(x = previsao,
+             y = observado - previsao,
+             colour = observado - previsao)) +
+  geom_jitter()
+```
+
+```{r}
+modelo.ridge$results %>% 
+  filter(RMSE == min(RMSE)) %>% 
+  select(RMSE,
+         Rsquared)
+```
 
 ```{r}
 # modelo.knn <- train(Price ~.,
@@ -92,6 +122,36 @@ modelo.ridge
 modelo.knn <- readRDS(file="knn.rds")
 modelo.knn
 ```
+
+```{r}
+plot(modelo.knn, xlab = "#Vizinhos (k)")
+```
+
+```{r}
+plot(varImp(modelo.knn))
+```
+
+```{r}
+predicoes.knn <- predict(modelo.knn)
+predicoes.knn
+
+df.knn.pred <- data.frame(previsao = predicoes.knn, observado = amostra.validacao$Price)
+
+df.knn.pred %>% 
+  ggplot(aes(x = previsao,
+             y = observado - previsao,
+             colour = observado - previsao)) +
+  geom_jitter()
+```
+
+
+```{r}
+modelo.knn$results %>% 
+  filter(RMSE == min(RMSE)) %>% 
+  select(RMSE,
+         Rsquared)
+```
+
 
 ```{r}
 removeNaoAlfanumericos <- function(x) str_replace_all(x, "[^[:alnum:]]", "")
@@ -116,4 +176,28 @@ amostra$Make <- removeNaoAlfanumericos(amostra$Make)
 ```{r}
 modelo.mlp <- readRDS(file="mlp.rds")
 modelo.mlp
+```
+
+```{r}
+plot(modelo.mlp)
+```
+
+```{r}
+predicoes.mlp <- predict(modelo.mlp)
+predicoes.mlp
+
+df.mlp.pred <- data.frame(previsao = predicoes.mlp, observado = amostra.validacao$Price)
+
+df.mlp.pred %>% 
+  ggplot(aes(x = previsao,
+             y = observado - previsao,
+             colour = observado - previsao)) +
+  geom_jitter()
+```
+
+```{r}
+modelo.mlp$results %>% 
+  filter(RMSE == min(RMSE)) %>% 
+  select(RMSE,
+         Rsquared)
 ```
